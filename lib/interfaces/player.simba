@@ -2,7 +2,7 @@
   ========================================
   EXAMPLES:
   ----------------------------------------
-  currentExperience := tPlayer.getExperience();
+  currentExperience := Player.getExperience();
   ========================================
 }
 
@@ -23,11 +23,11 @@ function tPlayer.getExperience(funcIconTextureId: integer = 48705): integer;
   ========================================
   EXAMPLES:
   ----------------------------------------
-  if tPlayer.isAnimating(playerId) then
+  if Player.isAnimating(playerId) then
     doAction();
 
   You can use a countdown if an action takes longer than the actual animation.
-  if tPlayer.isAnimating(playerId, 2000) then
+  if Player.isAnimating(playerId, 2000) then
     doAction();
   ========================================
 }
