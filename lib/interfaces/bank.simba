@@ -182,9 +182,9 @@ function tBank.close(): boolean;
     repeat
       typeByte(VK_ESCAPE);
       wait(normalRandom(400, 600));
-    until (not bank.hasBank()) or (funcTimeout.isFinished());
+    until (not self.hasBank()) or (funcTimeout.isFinished());
 
-    if (bank.hasBank()) then
+    if (self.hasBank()) then
       mouse.click(ogl.getClientMidPoint().closest(ogl.getTextures(16320, 7086623))[0].randomizePointEllipse(7))
     else
       exit(true);
@@ -192,17 +192,17 @@ function tBank.close(): boolean;
     funcTimeout.setTime(1000);
     repeat
       wait(100);
-    until (funcTimeout.isFinished()) or (not bank.hasBank());
+    until (funcTimeout.isFinished()) or (not self.hasBank());
 
-    exit(bank.hasBank());
+    exit(self.hasBank());
   end;
 
 {
   ========================================
   EXAMPLES:
   ----------------------------------------
-  if tBank.getTab()<>3 then
-    tBank.setTab(3);
+  if Bank.getTab()<>3 then
+    Bank.setTab(3);
   ========================================
 }
 
@@ -298,9 +298,9 @@ function tBank.open(): boolean;
     funcTimeout.setTime(2000);
     repeat
       wait(100);
-    until (funcTimeout.isFinished()) or (bank.hasBank());
+    until (funcTimeout.isFinished()) or (self.hasBank());
 
-    result := bank.hasBank();
+    result := self.hasBank();
   end;   
 
 {
