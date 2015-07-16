@@ -301,6 +301,7 @@ function tInventory.getItems(funcID:int32):glTextureArray;
     funcPointerIndex,
       funcPointerSize,
       funcResultIndex:uInt32=0;
+    funcTexture:glTexture;
   begin
     funcPointer:=glTextures(funcPointerSize);
     {if funcPointerSize<1 then
@@ -322,8 +323,12 @@ function tInventory.getItems(funcID:int32):glTextureArray;
           break
         else if (funcPointer^=funcID) and (abs(0+(funcPointer+20)^-(funcPointer+28)^)>1) and (abs(0+(funcPointer+24)^-(funcPointer+32)^)>1) then
           begin
-            result[funcResultIndex]:=glTexture(funcPointer^);
-            funcResultIndex:=funcResultIndex+1;
+            funcTexture := glTexture(funcPointer^);
+            if (funcTexture.x <> 1254) then
+            begin
+              result[funcResultIndex]:=funcTexture;
+              funcResultIndex:=funcResultIndex+1;
+            end;
           end;
         funcPointer:=funcPointer+36;
       end;
@@ -362,8 +367,12 @@ function tInventory.getItems(funcID:array of int32):glTextureArray;overload;
           begin
             if (funcPointer^=funcID[funcIDIndex]) and (abs(0+(funcPointer+20)^-(funcPointer+28)^)>1) and (abs(0+(funcPointer+24)^-(funcPointer+32)^)>1) then
               begin
-                result[funcResultIndex]:=glTexture(funcPointer^);
-                funcResultIndex:=funcResultIndex+1;
+                funcTexture := glTexture(funcPointer^);
+                if (funcTexture.x <> 1254) then
+                begin
+                  result[funcResultIndex]:=funcTexture;
+                  funcResultIndex:=funcResultIndex+1;
+                end;
                 break;
               end;
           end;
@@ -380,6 +389,7 @@ function tInventory.getItems(funcID,funcColourID:int32):glTextureArray;overload;
     funcPointerIndex,
       funcPointerSize,
       funcResultIndex:uInt32=0;
+    funcTexture:glTexture;
   begin
     funcPointer:=glTextures(funcPointerSize);
     {if funcPointerSize<1 then
@@ -401,8 +411,12 @@ function tInventory.getItems(funcID,funcColourID:int32):glTextureArray;overload;
           break
         else if (funcPointer^=funcID) and similarColors((funcPointer+4)^,funcColourID,oglColourTolerance) and (abs(0+(funcPointer+20)^-(funcPointer+28)^)>1) and (abs(0+(funcPointer+24)^-(funcPointer+32)^)>1) then
           begin
-            result[funcResultIndex]:=glTexture(funcPointer^);
-            funcResultIndex:=funcResultIndex+1;
+            funcTexture := glTexture(funcPointer^);
+            if (funcTexture.x <> 1254) then
+            begin
+              result[funcResultIndex]:=funcTexture;
+              funcResultIndex:=funcResultIndex+1;
+            end;
           end;
         funcPointer:=funcPointer+36;
       end;
@@ -419,6 +433,7 @@ function tInventory.getItems(funcID,funcColourID:array of int32):glTextureArray;
       funcPointerIndex,
       funcPointerSize,
       funcResultIndex:uInt32=0;
+    funcTexture:glTexture;
   begin
     funcPointer:=glTextures(funcPointerSize);
     {if funcPointerSize<1 then
@@ -445,8 +460,12 @@ function tInventory.getItems(funcID,funcColourID:array of int32):glTextureArray;
                 begin
                   if similarColors((funcPointer+4)^,funcColourID[funcColourIDIndex],oglColourTolerance) and (abs(0+(funcPointer+20)^-(funcPointer+28)^)>1) and (abs(0+(funcPointer+24)^-(funcPointer+32)^)>1) then
                     begin
-                      result[funcResultIndex]:=glTexture(funcPointer^);
-                      funcResultIndex:=funcResultIndex+1;
+                      funcTexture := glTexture(funcPointer^);
+                      if (funcTexture.x <> 1254) then
+                      begin
+                        result[funcResultIndex]:=funcTexture;
+                        funcResultIndex:=funcResultIndex+1;
+                      end;
                     end;
 
                 end;

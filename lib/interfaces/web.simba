@@ -1,0 +1,91 @@
+{
+  ========================================
+  EXAMPLES:
+  ----------------------------------------
+  responseContent := tWeb.proxyRequeset('https://www.google.com');
+  ========================================
+}
+
+function tWeb.proxyRequest(funcUrl: string): string;
+  begin
+    result := getPage('http://static.frement.net/proxy.php?u=' + funcUrl);
+  end;
+
+{
+  ========================================
+  EXAMPLES:
+  ----------------------------------------
+  This function requires that the response content contains nothing but the version number in
+  semantic versioning format. (http://www.semver.org)
+
+  shouldUpdate := not tWeb.isUpToDate('1.0.0', 'https://www.github.com/acme/script.version');
+  ========================================
+}
+
+function tWeb.isUpToDate(funcLocalVersion, funcUrl: string; funcUseProxy: boolean = true): boolean;
+  var
+    i: integer;
+    funcRemoteVersion: string;
+    funcRemoteVersionNumbers, funcLocalVersionNumbers: TStringArray;
+  begin
+    if (funcUseProxy) and (pos('https://', funcUrl) <> 0) then
+      funcRemoteVersion := proxyRequest(funcUrl)
+    else
+      funcRemoteVersion := getPage(funcUrl);
+
+    funcRemoteVersionNumbers := explode('.', funcRemoteVersion);
+    funcLocalVersionNumbers := explode('.', funcLocalVersion);
+
+    for i := low(funcRemoteVersionNumbers) to high(funcRemoteVersionNumbers) do
+    begin
+      if (strToInt(funcRemoteVersionNumbers[i]) <> strToInt(funcLocalVersionNumbers[i])) then
+        exit(false);
+    end;
+
+    exit(true);
+  end;
+
+{
+  ========================================
+  EXAMPLES:
+  ----------------------------------------
+  Scripts automatically get saved in the Simba/Scripts directory.
+
+  tWeb.update('https://www.github.com/acme/script.simba', 'SuperAwesomeScript');
+  
+  Pass a different path to save a script somewhere else. This example works great for updating includes.
+  tWeb.update('https://www.github.com/acme/include.simba', 'SuperAwesomeInclude', true, includePath);
+  ========================================
+}
+
+procedure tWeb.update(funcUrl, funcScriptName: string; funcUseProxy: boolean = true; funcPath: string = '')
+  var
+    funcFile: integer;
+    funcScript, funcFileName: string;
+  begin
+    if (funcUseProxy) and (pos('https://', funcUrl) <> 0) then
+      funcScript := proxyRequest(funcUrl)
+    else
+      funcScript := getPage(funcUrl);
+
+    if (funcPath = '') then
+      funcPath := scriptPath;
+
+    if (pos('.simba', funcScriptName) <> 0) then
+      funcFileName := funcPath + funcScriptName
+    else
+      funcFileName := funcPath + funcScriptName + '.simba';
+
+    funcFile := rewriteFile(funcFileName, true);
+
+    try
+      writeFileString(funcFile, funcScript)
+    except
+      writeln('Failed to write!');
+    end;
+
+    closeFile(funcFile);
+
+    writeln('Script has been updated, please re-open this file and restart the script.');
+    terminateScript();
+  end;

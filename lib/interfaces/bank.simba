@@ -169,8 +169,40 @@ function tBank.clickPreset(funcPreset:int32):boolean;
   ========================================
   EXAMPLES:
   ----------------------------------------
-  if tBank.getTab()<>3 then
-    tBank.setTab(3);
+  if tInventory.getItemCount() = 0 then
+    tBank.close();
+  ========================================
+}
+
+function tBank.close(): boolean;
+  var
+    funcTimeout: tCountDown;
+  begin
+    funcTimeout.setTime(1500);
+    repeat
+      typeByte(VK_ESCAPE);
+      wait(normalRandom(400, 600));
+    until (not self.hasBank()) or (funcTimeout.isFinished());
+
+    if (self.hasBank()) then
+      mouse.click(ogl.getClientMidPoint().closest(ogl.getTextures(16320, 7086623))[0].randomizePointEllipse(7))
+    else
+      exit(true);
+
+    funcTimeout.setTime(1000);
+    repeat
+      wait(100);
+    until (funcTimeout.isFinished()) or (not self.hasBank());
+
+    exit(self.hasBank());
+  end;
+
+{
+  ========================================
+  EXAMPLES:
+  ----------------------------------------
+  if Bank.getTab()<>3 then
+    Bank.setTab(3);
   ========================================
 }
 
@@ -231,6 +263,45 @@ function tBank.hasBank():boolean;
       end;
     exit(result);
   end;
+
+{
+  ========================================
+  EXAMPLES:
+  ----------------------------------------
+  if tBank.open() then
+    tBank.clickDepositCarriedItems();
+  ========================================
+}
+
+function tBank.open(): boolean;
+  const
+    BANKS : tCardinalArray = [1828922260, 2878626002, 2083337462, 2697527608, 915100373, 3489743445, 4243090208, 2783808500];
+    BANK_BOOTHS: tCardinalArray = [2697527608];
+    BANKERS : tCardinalArray = [1828922260];
+  var
+    funcTimeout: tCountDown;
+    funcClickPoint, funcClientCenter: tPoint;
+    funcBanks, funcBankBooths, funcBankers: glModelArray;
+  begin
+    funcClientCenter := ogl.getClientMidPoint();
+    funcBankBooths := ogl.getModels(BANK_BOOTHS);
+    if (not funcBankBooths.isEmpty()) then
+    begin
+      funcBankers := ogl.getModels(BANKERS);
+      funcClickPoint := funcClientCenter.closest(funcBankers)[0].closest(funcBankBooths)[0].randomizePointEllipse(25);
+    end
+    else
+      funcClickPoint := funcClientCenter.closest(ogl.getModels(BANKS))[0].randomizePointEllipse(25);
+
+    mouse.click(funcClickPoint);
+
+    funcTimeout.setTime(2000);
+    repeat
+      wait(100);
+    until (funcTimeout.isFinished()) or (self.hasBank());
+
+    result := self.hasBank();
+  end;   
 
 {
   ========================================

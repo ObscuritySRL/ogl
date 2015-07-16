@@ -1,0 +1,50 @@
+{
+  ========================================
+  EXAMPLES:
+  ----------------------------------------
+  currentExperience := Player.getExperience();
+  ========================================
+}
+
+function tPlayer.getExperience(funcIconTextureId: integer = 48705): integer;
+  var
+    funcXpTexture: glTextureArray;
+    funcXpBox: tBox;
+  begin
+    funcXpTexture := ogl.getTextures(funcIconTextureId);
+    if (not funcXpTexture.isEmpty()) then
+    begin
+      funcXpBox := intToBox(funcXpTexture[0].bounds.x1 - 250, funcXpTexture[0].bounds.y1, funcXpTexture[0].bounds.x2, funcXpTexture[0].bounds.y2);
+      result := explode('+', ogl.getChars(funcXpBox).toString())[0].parseInt();
+    end;
+  end;
+
+{
+  ========================================
+  EXAMPLES:
+  ----------------------------------------
+  if Player.isAnimating(playerId) then
+    doAction();
+
+  You can use a countdown if an action takes longer than the actual animation.
+  if Player.isAnimating(playerId, 2000) then
+    doAction();
+  ========================================
+}
+
+function tPlayer.isAnimating(funcPlayerId: integer; funcTimeout: tCountdown = 0): boolean;
+  var
+    funcIdle: glModelArray;
+  begin
+    if (funcTimeout = 0) then
+      result := (ogl.getModels(funcPlayerId).isEmpty())
+    else
+    begin
+      repeat
+        funcIdle := ogl.getModels(funcPlayerId);
+        wait(100);
+      until (funcIdle.isEmpty()) or (funcTimeout.isFinished());
+
+      result := funcIdle.isEmpty();
+    end;
+  end;
